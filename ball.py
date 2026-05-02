@@ -5,13 +5,25 @@ import math
 import pygame
 
 #screen resolution variable
-x_screen, y_screen = 1000, 1000
+x_screen, y_screen = 2400,1080
 
 #display resolution
 window = pygame.display.set_mode((x_screen, y_screen))
-
 #gravity
-G = 2
+G = 1
+
+class Square:
+    def __init__(self, start_position_x, start_position_y, end_position_x, end_position_y, colour):
+        self.start_position_x = start_position_x
+        self.start_position_y = start_position_y
+        self.end_position_x = end_position_x
+        self.end_position_y = end_position_y
+        self.colour = colour
+       
+    def render_s(self):
+        pygame.draw.line(window, self.colour, (self.start_position_x, self.start_position_y),(self.end_position_x, self.end_position_y),3)
+    
+    
 
 #class
 class Circle:
@@ -23,7 +35,7 @@ class Circle:
         self.radius = radius
         self.colour = colour
 
-    def render(self):
+    def render_c(self):
         pygame.draw.circle( window, self.colour, (int(self.position_x), int(self.position_y)), self.radius)
 
     def speed(self):
@@ -31,6 +43,12 @@ class Circle:
         self.position_y += self.speed_y
 
     def wall_collision(self):
+        
+        #square vectors
+        n_upper_left = pygame.math.Vector2(-math.cos(math.radians(45)), -math.                 cos(math.radians(45)))
+        n_upper_right = pygame.math.Vector2(math.cos(math.radians(45)), -math.                cos(math.radians(45)))
+        n_lower_left = pygame.math.Vector2(-math.cos(math.radians(45)), math.                   cos(math.radians(45)))
+        n_lower_right = pygame.math.Vector2(math.cos(math.radians(45)), math.                  cos(math.radians(45)))
 
         #wall vectors
         n_floor = pygame.math.Vector2(0, -1)
@@ -73,6 +91,9 @@ class Circle:
 #cirkel
 circle_1 = Circle(50, 250, 5, 5, 20, (255,255,255))
 
+#square
+line_1 = Square(x_screen/2, y_screen/2, x_screen/2 +60, y_screen/2 +60, (255,255,255))
+
 #initialize pygame
 pygame.init()
 
@@ -92,8 +113,11 @@ while run:
     window.fill((0, 0, 0))
 
     #rendering circle
-    circle_1.render()
-
+    circle_1.render_c()
+    
+    #renering lines
+    line_1.render_s()
+    
     #calculating gravity
     circle_1.gravity()
 
@@ -107,6 +131,6 @@ while run:
     pygame.display.flip()
 
     #frames per second
-    clock.tick(60)
+    clock.tick(120)
 
 pygame.quit()
